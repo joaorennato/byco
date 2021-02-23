@@ -1,3 +1,4 @@
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import styled from 'styled-components/native';
 
 export const Container = styled.SafeAreaView`
@@ -95,4 +96,20 @@ export const NameArea = styled.Text`
 export const EmailArea = styled.Text`
     font-size: 16px;
     color: #000000;
+`;
+
+export const ButtonAvatar = styled.TouchableOpacity`
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+`;
+
+export const ButtonAvatarText = styled.Text`
+    background-color: #000000;
+    padding: 2px 15px 2px 7px;
+    font-size: 12px;
+    color: #FFFFFF;
+    position: absolute;
+    right: 0; bottom: 0;
+    z-index:2;
 `;

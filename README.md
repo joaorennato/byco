@@ -2,7 +2,14 @@
 
 Byco é um App escrito em react native que tem a pretensão de ser um "catálogo de diaristas".
 
-## Primeiro commit.
+## Segundo commit - 22/02/2021
+* App está funcional.
+* Api: https://api.xso.com.br/devbarber/
+* Reducer foi configurado para armazenar nome e email, além do avatar que já armazenava.
+* View de profile foi refeita e agora puxa os dados diretamente do context, e nao mais realiza uma request à Api para isso.
+* Próximos objetivos: colocar a lista de favoritos no reducer também e modificar a view "Favorites" para exibir os dados a partir de lá.
+
+## Primeiro commit - 22/02/2021
 
 * App está funcional.
 * Api: https://api.xso.com.br/devbarber/

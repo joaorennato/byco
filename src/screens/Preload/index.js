@@ -27,12 +27,9 @@ export default () => {
                 if(json.token){
 
                     await AsyncStorage.setItem('token', json.token);
-                    userDispatch({
-                        type: 'setAvatar',
-                        payload: {
-                            avatar: json.data.avatar
-                        }
-                    });
+                    userDispatch({ type: 'setName', payload: { name: json.data.name } });
+                    userDispatch({ type: 'setEmail', payload: { email: json.data.email } });
+                    userDispatch({ type: 'setAvatar', payload: { avatar: json.data.avatar } });
     
                     navigation.reset({
                         routes:[{

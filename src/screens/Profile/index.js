@@ -1,6 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { RefreshControl } from 'react-native';
+import React, { useState, useEffect, useContext } from 'react';
+import AsyncStorage from '@react-native-community/async-storage';
 import { useNavigation } from '@react-navigation/native';
+import { UserContext } from '../../contexts/UserContext';
+import { launchImageLibrary} from 'react-native-image-picker';
+
 import { 
     Container, 
     HeaderArea, 
@@ -18,44 +21,36 @@ import {
     InfoArea, 
     NameArea, 
     EmailArea, 
+    ButtonAvatar, 
+    ButtonAvatarText
 } from './styles';
 
 import Api from '../../Api';
 
 export default () => {
 
+    const { state:user } = useContext(UserContext);
+    const { dispatch: userDispatch } = useContext(UserContext);
     const navigation = useNavigation();
 
-    const [loading, setLoading] = useState(true);
-    const [avatar, setAvatar] = useState('');
-    const [name, setName] = useState('');
+    const [loading, setLoading] = useState(false);
     const [newName, setNewName] = useState('');
-    const [email, setEmail] = useState('');
     const [newEmail, setNewEmail] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [newPasswordConfirm, setNewPasswordConfirm] = useState('');
 
-    useEffect(()=>{
-        getUser();
-    }, []);
-
-    const getUser = async () => {
-        setLoading(true);
-
-        let res = await Api.getUser();
-
-        if(res.error == ''){
-            setAvatar(res.data.avatar);
-            setName(res.data.name);
-            setEmail(res.data.email);
-        } else {
-            alert('Erro: ' + res.error);
-        }
-
-        setLoading(false);
+    const handleLogoutClick = async () => {
+        await Api.logout();
+        navigation.reset({
+            routes: [{
+                name: 'SignIn'
+            }]
+        });
     }
 
     const handleUpdateUser = async () => {
+        setLoading(true);
+        
         let body = {};
 
         if(newName != ''){
@@ -75,25 +70,80 @@ export default () => {
         }
 
         let res = await Api.updateUser(body);
+
+        console.log(res);
+        
         if(res.error == ''){
-            setLoading(true);
+            if(newName != ''){
+                userDispatch({ type: 'setName', payload: { name: newName } });
+            }
+
+            if(newEmail != ''){
+                userDispatch({ type: 'setEmail', payload: { email: newEmail } });
+            }
+
             alert('Perfil atualizado!');
-            getUser();
-            setLoading(false);
         } else {
-            console.log("ERRO", res.error);
-            alert("Erro: " + res.error);
+            console.log(Object.keys(res.error).length);
+
+            for(x=0; x<Object.keys(res.error).length; x++){
+                console.log(res.error[x]);
+            }
+
+            alert("Erro: " + JSON.stringify(res.error));
         }
+
+        setLoading(false);
 
     }
 
-    const handleLogoutClick = async () => {
-        await Api.logout();
-        navigation.reset({
-            routes: [{
-                name: 'SignIn'
-            }]
+    const createFormData = (photo, body) => {
+        const data = new FormData();
+      
+        data.append("avatar", {
+          name: photo.fileName,
+          type: photo.type,
+          uri:
+            Platform.OS === "android" ? photo.uri : photo.uri.replace("file://", "")
         });
+      
+        Object.keys(body).forEach(key => {
+          data.append(key, body[key]);
+        });
+      
+        return data;
+    }
+
+    const handleUpdateAvatar = async (avatar) => {
+        
+        setLoading(true);
+
+        const token = await AsyncStorage.getItem('token');
+        let dados = createFormData(avatar, { token: token })
+        let res = await Api.updateAvatar(dados);
+        if(res.error == ''){
+            alert('Foto de Perfil foi atualizada!');
+            userDispatch({ type: 'setAvatar', payload: { avatar: avatar.uri } });
+        } else {
+            alert("Erro: " + JSON.stringify(json.error));
+        }
+
+        setLoading(false);
+    }
+
+    const abrirImagePicker = () => {
+        let options = {
+            mediaType: 'photo'
+        };
+        launchImageLibrary(options,(response) => {
+            if(response.didCancel) {
+                console.log('user cancelled image picker');
+            } else if (response.error) {
+                console.log('image picker error',response.error);
+            } else {
+                handleUpdateAvatar(response);
+            }
+        })
     }
 
     return (
@@ -105,18 +155,16 @@ export default () => {
             {loading && <LoadingIcon size="large" color="#000000" />}
 
             {!loading && 
-                <Scroller refreshControl={
-                    <RefreshControl refreshing={loading} onRefresh={getUser} />
-                }>
+                <Scroller>
                     <ProfileArea>
                         <InfoArea>
-                            <NameArea>{name}</NameArea>
-                            <EmailArea>{email}</EmailArea>
+                            <NameArea>{ user.name }</NameArea>
+                            <EmailArea>{ user.email }</EmailArea>
                         </InfoArea>
-                        <Avatar source={{uri: avatar}} />
-                        <ButtonSubmit onPress={()=>navigation.navigate('Avatar')}>
-                            <ButtonSubmitText>Trocar Foto de Perfil</ButtonSubmitText>
-                        </ButtonSubmit>
+                        <ButtonAvatar onPress={abrirImagePicker}>
+                            <Avatar source={{uri: user.avatar}} />
+                            <ButtonAvatarText>Toque para alterar</ButtonAvatarText>
+                        </ButtonAvatar>
                     </ProfileArea>
 
                     <ProfileArea>
