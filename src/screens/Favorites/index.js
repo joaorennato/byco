@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { UserContext } from '../../contexts/UserContext';
 import { RefreshControl } from 'react-native';
 import { 
     Container, 
@@ -13,27 +14,21 @@ import Api from '../../Api';
 import BarberItem from '../../components/BarberItem';
 
 export default () => {
-
+    
+    const { state:user } = useContext(UserContext);
     const [loading, setLoading] = useState(false);
-    const [list, setList] = useState([]);
+    const [list, setList] = useState(user.favorites);
 
     const getFavorites = async () => {
         setLoading(true);
         setList([]);
 
-        let res = await Api.getFavorites();
-        if(res.error == ''){
-            setList(res.list);
-        } else {
-            alert('Erro: ' + res.error);
+        if(user.favorites.length > 0){
+            setList(user.favorites);
         }
 
         setLoading(false);
     }
-
-    useEffect(()=>{
-        getFavorites();
-    }, []);
 
     return (
         <Container>

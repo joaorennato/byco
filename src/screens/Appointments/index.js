@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { UserContext } from '../../contexts/UserContext';
 import { RefreshControl } from 'react-native';
 import { 
     Container, 
@@ -14,26 +15,35 @@ import AppointmentItem from '../../components/AppointmentItem';
 
 export default () => {
 
+    const { state:user, dispatch:userDispatch } = useContext(UserContext);
     const [loading, setLoading] = useState(false);
-    const [list, setList] = useState([]);
+    const [list, setList] = useState(user.appointments);
 
     const getAppointments = async () => {
         setLoading(true);
         setList([]);
 
+        if(user.appointments.length > 0){
+            setList(user.appointments);
+        }
+
+        /*
         let res = await Api.getAppointments();
         if(res.error == ''){
             setList(res.list);
         } else {
             alert('Erro: ' + res.error);
         }
+        */
 
         setLoading(false);
     }
 
+    /*
     useEffect(()=>{
         getAppointments();
     }, []);
+    */
 
     //console.log(list);
 

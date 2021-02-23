@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { UserContext } from '../contexts/UserContext';
 import { useNavigation } from '@react-navigation/native';
 import styled from 'styled-components/native';
 
@@ -179,6 +180,7 @@ const days = [
 
 export default ({show, setShowModal, user, service}) => {
 
+    const { state, dispatch } = useContext(UserContext);
     const navigation = useNavigation();
 
     const [selectedYear, setSelectedYear] = useState(0);
@@ -289,8 +291,14 @@ export default ({show, setShowModal, user, service}) => {
             );
 
             if(res.error == ''){
-                setShowModal(false);
-                navigation.navigate('Appointments');
+                let res_ap = await Api.getAppointments();
+                if(res_ap.error == ''){
+                    setShowModal(false);
+                    dispatch({ type: 'setAppointments', payload: { appointments: res_ap.list } });
+                    navigation.navigate('Appointments');
+                } else {
+                    alert('Erro: ' + res_ap.error);
+                }
             } else {
                 alert('Erro: ' + res.error);
             }

@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { UserContext } from '../../contexts/UserContext';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import Swiper from 'react-native-swiper';
 import { 
@@ -22,6 +23,7 @@ import Api from '../../Api';
 
 export default () => {
 
+    const { state:user, dispatch:userDispatch } = useContext(UserContext);
     const navigation = useNavigation();
     const route = useRoute();
 
@@ -37,9 +39,16 @@ export default () => {
     const [selectedService, setSelectedService] = useState(null);
     const [showModal, setShowModal] = useState(false);
 
-    const handleFavoriteButtonClick = () => {
+    const handleFavoriteButtonClick = async() => {
         setFavorited( !favorited );
         Api.setFavorite(userInfo.id);
+
+        let res = await Api.getFavorites();
+        if(res.error == ''){
+            userDispatch({ type: 'setFavorites', payload: { favorites: res.list } });
+        } else {
+            alert('Erro: ' + res.error);
+        }
     }
 
     const handleBackButtonClick = () => {

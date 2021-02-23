@@ -24,13 +24,16 @@ export default () => {
             if(token !== null){
                 //validar o token
                 let json = await Api.checkToken(token);
+
                 if(json.token){
 
                     await AsyncStorage.setItem('token', json.token);
                     userDispatch({ type: 'setName', payload: { name: json.data.name } });
                     userDispatch({ type: 'setEmail', payload: { email: json.data.email } });
                     userDispatch({ type: 'setAvatar', payload: { avatar: json.data.avatar } });
-    
+                    userDispatch({ type: 'setFavorites', payload: { favorites: json.favorites } });
+                    userDispatch({ type: 'setAppointments', payload: { appointments: json.appointments } });
+
                     navigation.reset({
                         routes:[{
                             name: 'MainTab'

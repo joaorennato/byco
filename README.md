@@ -2,6 +2,15 @@
 
 Byco é um App escrito em react native que tem a pretensão de ser um "catálogo de diaristas".
 
+## Terceiro commit - 23/02/2021
+* App está funcional.
+* Api: https://api.xso.com.br/devbarber/
+* Reducer foi configurado para armazenar favorites e appointments, além dos dados que já armazenava.
+* Views de Favorites e Appointments tiveram o código refeito para mostrar os dados direto do context em vez de fazer uma requisiçào à Api para isso.
+* Próximos objetivos: 
+  * configurar reload automático das informações que estão no context quando o usuário favoritar/desfavoritar algum registro.
+  * configurar reload automático das informações que estão no context quando o usuário criar um novo agendamento.
+
 ## Segundo commit - 22/02/2021
 * App está funcional.
 * Api: https://api.xso.com.br/devbarber/

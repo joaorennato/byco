@@ -84,12 +84,7 @@ export default () => {
 
             alert('Perfil atualizado!');
         } else {
-            console.log(Object.keys(res.error).length);
-
-            for(x=0; x<Object.keys(res.error).length; x++){
-                console.log(res.error[x]);
-            }
-
+            //console.log(Object.keys(res.error).length);
             alert("Erro: " + JSON.stringify(res.error));
         }
 

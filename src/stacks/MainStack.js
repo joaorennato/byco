@@ -6,7 +6,6 @@ import SignIn from '../screens/SignIn';
 import SignUp from '../screens/SignUp';
 import MainTab from '../stacks/MainTab';
 import Barber from '../screens/Barber';
-import Avatar from '../screens/Avatar';
 
 const Stack = createStackNavigator();
 
@@ -23,7 +22,6 @@ export default () => {
             <Stack.Screen name="SignUp" component={SignUp} />
             <Stack.Screen name="MainTab" component={MainTab} />
             <Stack.Screen name="Barber" component={Barber} />
-            <Stack.Screen name="Avatar" component={Avatar} />
         </Stack.Navigator>
     );
 }
