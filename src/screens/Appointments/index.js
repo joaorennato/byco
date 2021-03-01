@@ -17,35 +17,24 @@ export default () => {
 
     const { state:user, dispatch:userDispatch } = useContext(UserContext);
     const [loading, setLoading] = useState(false);
-    const [list, setList] = useState(user.appointments);
+    const [list, setList] = useState([]);
 
     const getAppointments = async () => {
         setLoading(true);
         setList([]);
 
-        if(user.appointments.length > 0){
-            setList(user.appointments);
-        }
+        let appointments = user.appointments ? user.appointments : false;
 
-        /*
-        let res = await Api.getAppointments();
-        if(res.error == ''){
-            setList(res.list);
-        } else {
-            alert('Erro: ' + res.error);
+        if(appointments && appointments.length > 0){
+            setList(prevAppointments => ([...prevAppointments, ...appointments]));
         }
-        */
 
         setLoading(false);
     }
 
-    /*
     useEffect(()=>{
         getAppointments();
     }, []);
-    */
-
-    //console.log(list);
 
     return (
 

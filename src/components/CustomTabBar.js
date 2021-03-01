@@ -43,11 +43,6 @@ export default ({state, navigation}) => {
 
     const goTo = (screenName) => {
         navigation.navigate(screenName);
-        // navigation.reset({
-        //     routes:[{
-        //         name: screenName
-        //     }]
-        // });
     }
 
     const resetTo = (screenName) => {
@@ -64,19 +59,19 @@ export default ({state, navigation}) => {
                 <HomeIcon width="24" height="24" fill="#FFFFFF" style={{opacity: state.index===0 ? 1 : .7}} />
             </TabItem>
             
-            <TabItem onPress={()=>resetTo('Search')}>
+            <TabItem onPress={()=>goTo('Search')}>
                 <SearchIcon width="24" height="24" fill="#FFFFFF" style={{opacity: state.index===1 ? 1 : .7}} />
             </TabItem>
             
-            <TabItemCenter onPress={()=>resetTo('Appointments')}>
+            <TabItemCenter onPress={()=>goTo('Appointments')}>
                 <TodayIcon width="32" height="32" fill="#F28518" />
             </TabItemCenter>
             
-            <TabItem onPress={()=>resetTo('Favorites')}>
+            <TabItem onPress={()=>goTo('Favorites')}>
                 <FavoriteIcon width="24" height="24" fill="#FFFFFF" style={{opacity: state.index===3 ? 1 : .7}} />
             </TabItem>
             
-            <TabItem onPress={()=>resetTo('Profile')}>
+            <TabItem onPress={()=>goTo('Profile')}>
                 { user.avatar !== '' ? 
                     <AvatarIcon source={{uri: user.avatar}} /> : 
                     <AccountIcon width="24" height="24" fill="#FFFFFF" style={{opacity: state.index===4 ? 1 : .7}} />

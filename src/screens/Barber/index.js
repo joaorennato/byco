@@ -45,6 +45,7 @@ export default () => {
 
         let res = await Api.getFavorites();
         if(res.error == ''){
+            console.log("FAVORITOS: ", res.list);
             userDispatch({ type: 'setFavorites', payload: { favorites: res.list } });
         } else {
             alert('Erro: ' + res.error);

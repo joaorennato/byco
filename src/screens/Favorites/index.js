@@ -15,20 +15,26 @@ import BarberItem from '../../components/BarberItem';
 
 export default () => {
     
-    const { state:user } = useContext(UserContext);
+    const { state:user, dispatch:userDispatch } = useContext(UserContext);
     const [loading, setLoading] = useState(false);
-    const [list, setList] = useState(user.favorites);
+    const [list, setList] = useState([]);
 
-    const getFavorites = async () => {
+    const getFavorites = () => {
         setLoading(true);
         setList([]);
 
-        if(user.favorites.length > 0){
-            setList(user.favorites);
+        let favoritos = user.favorites ? user.favorites : false;
+
+        if(favoritos && favoritos.length > 0){
+            setList(prevFavorites => ([...prevFavorites, ...favoritos]));
         }
 
         setLoading(false);
     }
+
+    useEffect(()=>{
+        getFavorites();
+    }, []);
 
     return (
         <Container>
@@ -39,7 +45,7 @@ export default () => {
             <Scroller refreshControl={
                 <RefreshControl refreshing={loading} onRefresh={getFavorites} />
             }>
-                { !loading && list.length === 0 && 
+                { !loading && Object.keys(list).length === 0 && 
                     <EmptyWarning>Não há favoritos na sua lista.</EmptyWarning>
                 }
                 <ListArea>
